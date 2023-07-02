@@ -16,6 +16,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.learnrecycleview.ui.theme.LearnRecycleviewTheme
+//import kotlinx.coroutines.DefaultExecutor.thread
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 import org.jsoup.HttpStatusException
 import org.jsoup.Jsoup
@@ -36,8 +42,9 @@ class MainActivity : ComponentActivity() {
 
 		val button = findViewById<Button>(R.id.btn_refresh)
 		button.setOnClickListener {
-			getHtmlFromWeb()
+				getHtmlFromWeb()
 		}
+
 
 		// ArrayList of class ItemsViewModel
 //		val data = ArrayList<ItemsViewModel>()
@@ -56,12 +63,19 @@ class MainActivity : ComponentActivity() {
 
 	private fun getHtmlFromWeb() {
 		val recyclerview = findViewById<RecyclerView>(R.id.recyclerview)
-		val data = GetCnbetaData()
-		// This will pass the ArrayList to our Adapter
-		val adapter = CustomAdapter(data)
+//		val data = null
+		GlobalScope.launch (Dispatchers.Main){
+			var data = withContext(Dispatchers.IO){
+				GetCnbetaData()
+			}
+			if (data != null) {
+				// This will pass the ArrayList to our Adapter
+				val adapter = CustomAdapter(data)
 
-		// Setting the Adapter with the recyclerview
-		recyclerview.adapter = adapter
+				// Setting the Adapter with the recyclerview
+				recyclerview.adapter = adapter
+			}
+		}
 
 	}
 
@@ -80,7 +94,7 @@ class MainActivity : ComponentActivity() {
 			val img = tt.getElementsByTag("img")
 //			println(img.attr("src"))
 //			println(img.attr("alt"))
-			data.add(ItemsViewModel(R.drawable.ic_baseline_folder_24, i.toString() + img.attr("alt")))
+			data.add(ItemsViewModel(R.drawable.ic_baseline_folder_24, i.toString() +". "+ img.attr("alt")))
 			i++
 		}
 
