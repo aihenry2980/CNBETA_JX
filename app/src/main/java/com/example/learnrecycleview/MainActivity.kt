@@ -44,21 +44,6 @@ class MainActivity : ComponentActivity() {
 		button.setOnClickListener {
 				getHtmlFromWeb()
 		}
-
-
-		// ArrayList of class ItemsViewModel
-//		val data = ArrayList<ItemsViewModel>()
-
-
-		// This loop will create 20 Views containing
-		// the image with the count of view
-//		for (i in 1..20) {
-//			data.add(ItemsViewModel(R.drawable.ic_baseline_folder_24, "Item " + i))
-//		}
-
-
-
-
 	}
 
 	private fun getHtmlFromWeb() {
